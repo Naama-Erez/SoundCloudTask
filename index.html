@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="SoundCloud">
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>SoundCloud</title>
+	<script src="node_modules/angular/angular.min.js" type="text/javascript"></script>
+	<script src="https://connect.soundcloud.com/sdk/sdk-3.2.1.js"></script>
+	<script src="dist/app.js"  type="text/javascript"></script>
+	<link rel="stylesheet" href="dist/style.css"/>
+
+<!-- ** For working without gulp **
+	<script src="src/SoundCloud.js"  type="text/javascript"></script>
+	<script src="src/searchController.js"  type="text/javascript"></script>
+	<script src="src/SoundCloudService.js"  type="text/javascript"></script>
+	<link rel="stylesheet" href="style/style.css"/>-->
+</head>
+<body>
+<div class="main-container" ng-controller="searchController as searchCtrl">
+		<div class="box-container">
+			<input type="text" name="searchBox" ng-model="searchTerm" placeholder="search">
+			<button ng-click="searchCtrl.searchClick(searchTerm)">search</button>
+			<ul ng-if="searchCtrl.settings.display == 'list'">
+				<li ng-repeat="track in searchCtrl.searchResults" ng-click="searchCtrl.selectTrack(track)">{{track.title}}</li>
+			</ul>
+			<div ng-if="searchCtrl.settings.display == 'tile'" >
+				<div ng-repeat="track in searchCtrl.searchResults" ng-click="searchCtrl.selectTrack(track)" class="tile-display" title="{{track.title}}">
+					<img ng-src="{{track.artwork_url != null ? track.artwork_url : '../img/no_img.png'}}" class="tile-image"/>
+				</div>
+			</div>
+			<button class="next-button" ng-click="searchCtrl.nextPage(searchTerm)" ng-show="searchCtrl.searchResults.length > 0">Next</button>
+			<div class="grid-buttons">
+				<button ng-click="searchCtrl.setDisplay('list')" title="List">
+					<img class="disp-button" src="img/list.png"/>
+				</button>
+				<button  ng-click="searchCtrl.setDisplay('tile')" title="Tile">
+					<img class="disp-button" src="img/tile.png"/>
+				</button>
+			</div>
+		</div>
+		<div class="box-container">
+			<img ng-src="{{searchCtrl.selectedImg}}" class="track-image" ng-class="{transparent:searchCtrl.hideImage}" ng-click="searchCtrl.embedTrack()"/>
+		</div>
+		<div class="box-container">
+			<h4>Recent Searches</h4>
+			<ul>
+				<li ng-repeat="item in searchCtrl.history" ng-click="searchCtrl.searchClick(item)">{{item}}</li>
+			</ul>
+		</div>
+</div>
+</body>
+</html>
